@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 interface GlitchPrankProps {
@@ -8,40 +8,50 @@ interface GlitchPrankProps {
 
 const GlitchPrank: React.FC<GlitchPrankProps> = ({ onComplete, playBeep }) => {
   const [phase, setPhase] = useState<'normal' | 'glitch' | 'resolve'>('normal');
+  const [error, setError] = useState<boolean>(false);
 
-  useEffect(() => {
-    // Start with normal operation
-    const normalTimer = setTimeout(() => {
-      setPhase('glitch');
-      // Play alarm sound
-      playBeep(400, 100);
-      setTimeout(() => playBeep(300, 100), 150);
-      setTimeout(() => playBeep(200, 200), 300);
-    }, 1000);
-
-    return () => clearTimeout(normalTimer);
-  }, [playBeep]);
-
-  useEffect(() => {
-    if (phase === 'glitch') {
-      const resolveTimer = setTimeout(() => {
-        setPhase('resolve');
-      }, 1500);
-
-      return () => clearTimeout(resolveTimer);
+  const transitionToNextPhase = useCallback((currentPhase: 'normal' | 'glitch' | 'resolve') => {
+    try {
+      switch (currentPhase) {
+        case 'normal':
+          setPhase('glitch');
+          playBeep(400, 100);
+          setTimeout(() => playBeep(300, 100), 150);
+          setTimeout(() => playBeep(200, 200), 300);
+          break;
+        case 'glitch':
+          setPhase('resolve');
+          break;
+        case 'resolve':
+          playBeep(1000, 100);
+          onComplete();
+          break;
+      }
+    } catch (err) {
+      console.error('Error in GlitchPrank transition:', err);
+      setError(true);
     }
-  }, [phase]);
+  }, [playBeep, onComplete]);
 
   useEffect(() => {
-    if (phase === 'resolve') {
-      const completeTimer = setTimeout(() => {
-        playBeep(1000, 100);
-        onComplete();
-      }, 2000);
-
-      return () => clearTimeout(completeTimer);
+    const timers: number[] = [];
+    
+    if (!error) {
+      switch (phase) {
+        case 'normal':
+          timers.push(setTimeout(() => transitionToNextPhase('normal'), 1000));
+          break;
+        case 'glitch':
+          timers.push(setTimeout(() => transitionToNextPhase('glitch'), 1500));
+          break;
+        case 'resolve':
+          timers.push(setTimeout(() => transitionToNextPhase('resolve'), 2000));
+          break;
+      }
     }
-  }, [phase, onComplete, playBeep]);
+
+    return () => timers.forEach(timer => clearTimeout(timer));
+  }, [phase, error, transitionToNextPhase]);
 
   return (
     <div className="crt-screen w-full h-screen flex items-center justify-center phosphor-glow">

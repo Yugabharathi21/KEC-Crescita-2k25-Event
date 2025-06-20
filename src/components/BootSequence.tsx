@@ -6,101 +6,108 @@ interface BootSequenceProps {
   playBeep: (frequency?: number, duration?: number) => void;
 }
 
+// ✅ Boot steps defined outside to keep them stable
+const BOOT_STEPS = [
+  '> SYSTEM ONLINE',
+  '> KONGU MAINFRAME BOOTING...',
+  '> AUTHENTICATION GRANTED',
+  '> INITIALIZING SYMPOSIUM PROTOCOL [CRESCITA_25]',
+  '> SCANNING NETWORK INTERFACES...',
+  '> LOADING MODULES: ████████████████████ 100%',
+  '> CONFERENCE SYSTEMS READY',
+  '> ESTABLISHING SECURE CONNECTION...',
+  '> CONNECTION ESTABLISHED',
+  "> CRESCITA'25 TERMINAL READY"
+];
+
 const BootSequence: React.FC<BootSequenceProps> = ({ onComplete, playBeep }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
 
-  const bootSteps = [
-    '&gt; SYSTEM ONLINE',
-    '&gt; KONGU MAINFRAME BOOTING...',
-    '&gt; AUTHENTICATION GRANTED',
-    '&gt; INITIALIZING SYMPOSIUM PROTOCOL [CRESCITA_25]',
-    '&gt; SCANNING NETWORK INTERFACES...',
-    '&gt; LOADING MODULES: ████████████████████ 100%',
-    '&gt; CONFERENCE SYSTEMS READY',
-    '&gt; ESTABLISHING SECURE CONNECTION...',
-    '&gt; CONNECTION ESTABLISHED',
-    '&gt; CRESCITA\'25 TERMINAL READY'
-  ];
-
   useEffect(() => {
-    if (currentStep < bootSteps.length) {
-      const step = bootSteps[currentStep];
+    let mounted = true;
+    const timeouts: number[] = [];
+    let typeInterval: number | null = null;
+
+    const cleanup = () => {
+      mounted = false;
+      if (typeInterval) clearInterval(typeInterval);
+      timeouts.forEach(t => clearTimeout(t));
+    };
+
+    if (currentStep < BOOT_STEPS.length) {
+      const step = BOOT_STEPS[currentStep];
       let charIndex = 0;
+
       setCurrentText('');
-      
-      const typeInterval = setInterval(() => {
+
+      typeInterval = window.setInterval(() => {
+        if (!mounted) return;
+
         if (charIndex <= step.length) {
           const displayText = step.substring(0, charIndex);
           setCurrentText(displayText);
-          
-          // Play beep occasionally during typing
+
+          // Beep occasionally
           if (charIndex < step.length && Math.random() < 0.3) {
             playBeep(800 + Math.random() * 200, 30);
           }
-          
+
           charIndex++;
         } else {
-          // Step completed
-          clearInterval(typeInterval);
+          clearInterval(typeInterval!);
           setCompletedSteps(prev => [...prev, step]);
           setCurrentText('');
-          
-          // Move to next step after a brief pause
-          setTimeout(() => {
-            setCurrentStep(prev => prev + 1);
-          }, 200);
-        }
-      }, 60);
 
-      return () => clearInterval(typeInterval);
+          const nextStepTimeout = window.setTimeout(() => {
+            if (!mounted) return;
+            setCurrentStep(prev => prev + 1);
+            playBeep(1000, 50);
+          }, 500);
+
+          timeouts.push(nextStepTimeout);
+        }
+      }, 50);
     } else {
-      // All steps completed - show final screen then complete
-      setTimeout(() => {
+      const finalBeepTimeout = window.setTimeout(() => {
+        if (!mounted) return;
         playBeep(1200, 200);
-        setTimeout(() => {
+
+        const completeTimeout = window.setTimeout(() => {
+          if (!mounted) return;
           onComplete();
-        }, 1500);
+        }, 1000);
+
+        timeouts.push(completeTimeout);
       }, 500);
+
+      timeouts.push(finalBeepTimeout);
     }
-  }, [currentStep, bootSteps, onComplete, playBeep]);
+
+    return cleanup;
+  }, [currentStep, playBeep, onComplete]); // ✅ no bootSteps here
 
   return (
-    <div className="crt-screen w-full h-screen flex items-center justify-center phosphor-glow">
-      <div className="terminal-text text-2xl md:text-3xl lg:text-4xl max-w-4xl px-8">
-        <div className="space-y-4">
-          {/* Show completed steps */}
+    <div className="crt-screen w-full h-screen flex items-center justify-center phosphor-glow bg-black">
+      <div className="terminal-text text-lg md:text-xl lg:text-2xl max-w-4xl p-8">
+        <div className="space-y-2">
           {completedSteps.map((step, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
               className="mb-2"
-              dangerouslySetInnerHTML={{ __html: step }}
-            />
-          ))}
-          
-          {/* Show current typing step */}
-          {currentStep < bootSteps.length && (
-            <div className="flex items-center">
-              <span dangerouslySetInnerHTML={{ __html: currentText }} />
-              <span className="terminal-cursor ml-1">_</span>
-            </div>
-          )}
-          
-          {/* Show completion screen */}
-          {currentStep >= bootSteps.length && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="text-center mt-8"
             >
-              <div className="text-6xl mb-4">⚡</div>
-              <div className="amber-text text-xl">SYSTEM READY</div>
+              {step}
             </motion.div>
+          ))}
+          {currentStep < BOOT_STEPS.length && (
+            <div className="flex items-center">
+              <span>{currentText}</span>
+              <span className="terminal-cursor ml-1 inline-block"></span>
+            </div>
           )}
         </div>
       </div>
