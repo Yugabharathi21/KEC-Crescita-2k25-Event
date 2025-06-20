@@ -1,3 +1,140 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CRT Effects */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes glitch {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes textGlow {
+  0%, 100% { text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, 0 0 15px #00ff41; }
+  50% { text-shadow: 0 0 2px #00ff41, 0 0 5px #00ff41, 0 0 8px #00ff41; }
+}
+
+.crt-screen {
+  background: radial-gradient(ellipse at center, #0a0a0a 0%, #000 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    transparent 50%,
+    rgba(0, 255, 65, 0.03) 50.5%,
+    transparent 51%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  animation: scanlines 0.1s linear infinite;
+}
+
+.crt-screen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 255, 65, 0.05);
+  border-radius: 50%;
+  filter: blur(1px);
+  pointer-events: none;
+  animation: flicker 2s ease-in-out infinite alternate;
+}
+
+.terminal-text {
+  font-family: 'VT323', monospace;
+  color: #00ff41;
+  text-shadow: 0 0 10px #00ff41;
+  letter-spacing: 1px;
+}
+
+.terminal-cursor {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.glitch-text {
+  animation: glitch 0.3s infinite;
+}
+
+.phosphor-glow {
+  box-shadow: 
+    inset 0 0 50px rgba(0, 255, 65, 0.1),
+    0 0 50px rgba(0, 255, 65, 0.2);
+}
+
+.vault-border {
+  border: 2px solid #00ff41;
+  border-radius: 8px;
+  background: rgba(0, 255, 65, 0.05);
+  backdrop-filter: blur(1px);
+}
+
+.amber-text {
+  color: #ffb000;
+  text-shadow: 0 0 10px #ffb000;
+}
+
+.red-alert {
+  color: #ff0000;
+  text-shadow: 0 0 10px #ff0000;
+  animation: glitch 0.5s infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ff41;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00cc33;
+}
+
+/* Custom animations for typewriter effect */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid #00ff41;
+  white-space: nowrap;
+  animation: typewriter 2s steps(40, end), blink 1s infinite step-end alternate;
+}
