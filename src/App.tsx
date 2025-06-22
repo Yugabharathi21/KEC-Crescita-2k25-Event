@@ -39,44 +39,25 @@ function App() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden relative">
-      {/* Seamless Unified Background Layer */}
+      {/* Unified CRT Background Grid */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Base Dark Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-green-900/20" />
-        
-        {/* Primary Grid Pattern - Seamless */}
-        <div className="absolute inset-0 opacity-15">
+        {/* Main Grid Pattern */}
+        <div className="absolute inset-0 opacity-10">
           <div 
             className="w-full h-full"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(34, 197, 94, 0.4) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(34, 197, 94, 0.4) 1px, transparent 1px)
+                linear-gradient(rgba(34, 197, 94, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 197, 94, 0.3) 1px, transparent 1px)
               `,
-              backgroundSize: '40px 40px',
-              backgroundPosition: '0 0, 0 0'
+              backgroundSize: '50px 50px'
             }}
           />
         </div>
         
-        {/* Secondary Fine Grid */}
-        <div className="absolute inset-0 opacity-8">
-          <div 
-            className="w-full h-full"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(34, 197, 94, 0.2) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(34, 197, 94, 0.2) 1px, transparent 1px)
-              `,
-              backgroundSize: '10px 10px',
-              backgroundPosition: '0 0, 0 0'
-            }}
-          />
-        </div>
-        
-        {/* CRT Scanlines - Seamless */}
+        {/* CRT Scanlines */}
         <div 
-          className="absolute inset-0 opacity-25"
+          className="absolute inset-0 opacity-20"
           style={{
             background: `repeating-linear-gradient(
               0deg,
@@ -88,112 +69,23 @@ function App() {
           }}
         />
         
-        {/* Radial CRT Glow - Centered */}
-        <div className="absolute inset-0">
-          <div 
-            className="w-full h-full"
-            style={{
-              background: `radial-gradient(
-                ellipse at center,
-                rgba(34, 197, 94, 0.15) 0%,
-                rgba(34, 197, 94, 0.08) 25%,
-                rgba(34, 197, 94, 0.04) 50%,
-                transparent 70%,
-                rgba(0, 0, 0, 0.3) 100%
-              )`
-            }}
-          />
-        </div>
+        {/* Radial CRT Glow */}
+        <div className="absolute inset-0 bg-gradient-radial from-green-900/20 via-transparent to-black/80" />
         
         {/* Corner Vignette */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-tl from-transparent via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/60" />
         
-        {/* Animated Circuit Lines - Seamless Flow */}
+        {/* Animated Circuit Lines */}
         <motion.div
-          className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-green-500/60 to-transparent"
+          className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent"
           animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
         />
         <motion.div
-          className="absolute bottom-0 right-0 w-0.5 h-full bg-gradient-to-t from-transparent via-green-500/60 to-transparent"
+          className="absolute bottom-0 right-0 w-1 h-full bg-gradient-to-t from-transparent via-green-500/50 to-transparent"
           animate={{ y: ['100%', '-100%'] }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
         />
-        <motion.div
-          className="absolute top-0 right-0 w-full h-0.5 bg-gradient-to-l from-transparent via-green-500/40 to-transparent"
-          animate={{ x: ['100%', '-100%'] }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="absolute bottom-0 left-0 w-0.5 h-full bg-gradient-to-b from-transparent via-green-500/40 to-transparent"
-          animate={{ y: ['-100%', '100%'] }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-        />
-        
-        {/* Floating Data Streams */}
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`stream-${i}`}
-            className="absolute w-px h-20 bg-gradient-to-b from-green-400/60 to-transparent"
-            style={{
-              left: `${10 + i * 12}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: ['-100px', '100vh'],
-              opacity: [0, 0.8, 0],
-            }}
-            transition={{
-              duration: 8 + Math.random() * 4,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: 'linear'
-            }}
-          />
-        ))}
-        
-        {/* Circuit Board Pattern Overlay */}
-        <div className="absolute inset-0 opacity-5">
-          <svg className="w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <pattern id="circuit-seamless" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-                <path d="M20,20 L180,20 L180,180 L20,180 Z" fill="none" stroke="#22c55e" strokeWidth="1" opacity="0.3"/>
-                <path d="M20,100 L180,100" stroke="#22c55e" strokeWidth="1" opacity="0.3"/>
-                <path d="M100,20 L100,180" stroke="#22c55e" strokeWidth="1" opacity="0.3"/>
-                <circle cx="20" cy="20" r="4" fill="#22c55e" opacity="0.4"/>
-                <circle cx="180" cy="180" r="4" fill="#22c55e" opacity="0.4"/>
-                <circle cx="100" cy="100" r="6" fill="#22c55e" opacity="0.3"/>
-                <rect x="90" y="90" width="20" height="20" fill="none" stroke="#22c55e" strokeWidth="1" opacity="0.3"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#circuit-seamless)"/>
-          </svg>
-        </div>
-        
-        {/* Ambient Particles */}
-        {Array.from({ length: 30 }).map((_, i) => (
-          <motion.div
-            key={`particle-${i}`}
-            className="absolute w-1 h-1 bg-green-400/40 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -40, 0],
-              x: [0, Math.random() * 20 - 10, 0],
-              opacity: [0.2, 0.8, 0.2],
-              scale: [1, 1.5, 1],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-              ease: 'easeInOut'
-            }}
-          />
-        ))}
       </div>
 
       {/* Boot Sequence */}
@@ -214,29 +106,43 @@ function App() {
 
             {/* Hero Section */}
             <section className="min-h-screen flex items-center justify-center relative pt-20 pb-16 overflow-hidden">
-              {/* Hero Specific Effects */}
+              {/* Hero Background Effects */}
               <div className="absolute inset-0">
-                {/* Additional Hero Particles */}
-                {Array.from({ length: 15 }).map((_, i) => (
+                {/* Floating Particles */}
+                {Array.from({ length: 20 }).map((_, i) => (
                   <motion.div
-                    key={`hero-particle-${i}`}
-                    className="absolute w-2 h-2 bg-green-400/50 rounded-full"
+                    key={i}
+                    className="absolute w-2 h-2 bg-green-400/30 rounded-full"
                     style={{
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
                     }}
                     animate={{
-                      y: [0, -50, 0],
-                      opacity: [0.3, 1, 0.3],
-                      scale: [1, 2, 1],
+                      y: [0, -30, 0],
+                      opacity: [0.3, 0.8, 0.3],
+                      scale: [1, 1.5, 1],
                     }}
                     transition={{
-                      duration: 5 + Math.random() * 3,
+                      duration: 3 + Math.random() * 2,
                       repeat: Infinity,
-                      delay: Math.random() * 3,
+                      delay: Math.random() * 2,
                     }}
                   />
                 ))}
+                
+                {/* Circuit Board Pattern */}
+                <div className="absolute inset-0 opacity-5">
+                  <svg className="w-full h-full" viewBox="0 0 1000 1000">
+                    <defs>
+                      <pattern id="circuit" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                        <path d="M10,10 L90,10 L90,90 L10,90 Z" fill="none" stroke="#22c55e" strokeWidth="1"/>
+                        <circle cx="10" cy="10" r="3" fill="#22c55e"/>
+                        <circle cx="90" cy="90" r="3" fill="#22c55e"/>
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#circuit)"/>
+                  </svg>
+                </div>
               </div>
 
               <div className="container mx-auto px-4 relative z-10">
@@ -305,6 +211,13 @@ function App() {
                         transition={{ type: "spring", stiffness: 300 }}
                       >
                         <GlassmorphismPanel className="p-6 text-center relative overflow-hidden">
+                          {/* Background Circuit */}
+                          <div className="absolute inset-0 opacity-10">
+                            <div className="w-full h-full border border-green-500/30 rounded-lg" />
+                            <div className="absolute top-2 left-2 w-4 h-4 border-2 border-green-500/50 rounded-full" />
+                            <div className="absolute bottom-2 right-2 w-4 h-4 border-2 border-green-500/50 rounded-full" />
+                          </div>
+                          
                           <motion.div
                             whileHover={{ rotate: 360 }}
                             transition={{ duration: 0.6 }}
@@ -340,6 +253,7 @@ function App() {
                       }}
                       whileTap={{ scale: 0.95 }}
                     >
+                      {/* Button Circuit Pattern */}
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent 
                                       transform -skew-x-12 translate-x-full group-hover:translate-x-[-200%] 
                                       transition-transform duration-700" />
@@ -361,6 +275,7 @@ function App() {
                       }}
                       whileTap={{ scale: 0.95 }}
                     >
+                      {/* Scanning Line Effect */}
                       <motion.div
                         className="absolute top-0 left-0 w-full h-0.5 bg-green-400"
                         animate={{ x: ['-100%', '100%'] }}
@@ -396,6 +311,7 @@ function App() {
                 transition={{ duration: 4, repeat: Infinity }}
               />
               
+              {/* Additional Tech Elements */}
               <motion.div
                 className="absolute top-1/3 right-10 w-8 h-8 border border-green-400/40"
                 animate={{ 
@@ -406,34 +322,34 @@ function App() {
               />
             </section>
 
-            {/* Event Sections */}
+            {/* Event Sections with Enhanced Backgrounds */}
             <div id="events" className="relative">
               <EventSection
                 title="// TECHNICAL_EVENTS"
                 events={eventsData.technicalEvents}
-                className="relative"
+                className="bg-gradient-to-r from-gray-900/50 to-black/50 relative"
               />
 
               <EventSection
                 title="// WORKSHOPS"
                 events={eventsData.workshops}
-                className="relative"
+                className="bg-gradient-to-l from-gray-900/50 to-black/50 relative"
               />
 
               <EventSection
                 title="// NON_TECHNICAL_EVENTS"
                 events={eventsData.nonTechnicalEvents}
-                className="relative"
+                className="bg-gradient-to-r from-gray-900/50 to-black/50 relative"
               />
             </div>
 
             {/* Timeline Section */}
-            <div id="schedule" className="relative">
+            <div id="schedule" className="bg-gradient-to-b from-black/50 to-gray-900/50 relative">
               <Timeline events={eventsData.generalEvents} />
             </div>
 
             {/* Contact Section */}
-            <section id="contact" className="py-16 relative">
+            <section id="contact" className="py-16 bg-gradient-to-t from-gray-900/50 to-black/50 relative">
               <div className="container mx-auto px-4">
                 <motion.h2
                   initial={{ opacity: 0, y: -30 }}
@@ -444,6 +360,7 @@ function App() {
                   // CONTACT_MATRIX
                   <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-green-500 to-green-400 rounded-full" />
                   
+                  {/* Title Glow Effect */}
                   <motion.div
                     className="absolute inset-0 text-green-400/30 blur-lg"
                     animate={{ opacity: [0.3, 0.6, 0.3] }}
@@ -466,33 +383,33 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* Global CRT Effects - Seamless */}
+      {/* Enhanced Global CRT Effects */}
       <div className="fixed inset-0 pointer-events-none z-50">
         {/* Screen Flicker */}
         <motion.div
-          className="w-full h-full bg-green-500/3"
+          className="w-full h-full bg-green-500/5"
           animate={{ opacity: [0, 0.1, 0] }}
-          transition={{ duration: 0.15, repeat: Infinity, repeatType: "reverse" }}
+          transition={{ duration: 0.1, repeat: Infinity, repeatType: "reverse" }}
         />
         
         {/* Random Glitch Lines */}
         <motion.div
-          className="absolute w-full h-0.5 bg-green-400/20"
-          style={{ top: '25%' }}
+          className="absolute w-full h-0.5 bg-green-400/30"
+          style={{ top: '30%' }}
           animate={{ 
             opacity: [0, 1, 0],
             scaleX: [0, 1, 0]
           }}
-          transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 4 }}
+          transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 3 }}
         />
         <motion.div
-          className="absolute w-full h-0.5 bg-green-400/20"
-          style={{ top: '75%' }}
+          className="absolute w-full h-0.5 bg-green-400/30"
+          style={{ top: '70%' }}
           animate={{ 
             opacity: [0, 1, 0],
             scaleX: [0, 1, 0]
           }}
-          transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 6 }}
+          transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 5 }}
         />
       </div>
     </div>
