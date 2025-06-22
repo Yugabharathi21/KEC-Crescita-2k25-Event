@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Skull, Zap, AlertTriangle, Wifi, WifiOff } from 'lucide-react';
 
 interface BootSequenceProps {
   onComplete: () => void;
@@ -51,47 +50,80 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
   ];
 
   const asciiArt = `
-    ██████╗ ██████╗ ███████╗███████╗ ██████╗██╗████████╗ █████╗ 
-    ██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██║╚══██╔══╝██╔══██╗
-    ██████╔╝██████╔╝█████╗  ███████╗██║     ██║   ██║   ███████║
-    ██╔══██╗██╔══██╗██╔══╝  ╚════██║██║     ██║   ██║   ██╔══██║
-    ██║  ██║██║  ██║███████╗███████║╚██████╗██║   ██║   ██║  ██║
-    ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝╚═╝   ╚═╝   ╚═╝  ╚═╝
-                                                                  
-                        ██████╗ ███████╗
-                        ╚════██╗██╔════╝
-                         █████╔╝███████╗
-                        ██╔═══╝ ╚════██║
-                        ███████╗███████║
-                        ╚══════╝╚══════╝
+ ▄████▄   ██▀███  ▓█████   ██████ ▄▄▄█████▓ ██▓▄▄▄█████▓ ▄▄▄         
+▒██▀ ▀█  ▓██ ▒ ██▒▓█   ▀ ▒██    ▒ ▓  ██▒ ▓▒▓██▒▓  ██▒ ▓▒▒████▄       
+▒▓█    ▄ ▓██ ░▄█ ▒▒███   ░ ▓██▄   ▒ ▓██░ ▒░▒██▒▒ ▓██░ ▒░▒██  ▀█▄     
+▒▓▓▄ ▄██▒▒██▀▀█▄  ▒▓█  ▄   ▒   ██▒░ ▓██▓ ░ ░██░░ ▓██▓ ░ ░██▄▄▄▄██    
+▒ ▓███▀ ░░██▓ ▒██▒░▒████▒▒██████▒▒  ▒██▒ ░ ░██░  ▒██▒ ░  ▓█   ▓██▒   
+░ ░▒ ▒  ░░ ▒▓ ░▒▓░░░ ▒░ ░▒ ▒▓▒ ▒ ░  ▒ ░░   ░▓    ▒ ░░    ▒▒   ▓▒█░   
+  ░  ▒     ░▒ ░ ▒░ ░ ░  ░░ ░▒  ░ ░    ░     ▒ ░    ░      ▒   ▒▒ ░   
+░          ░░   ░    ░   ░  ░  ░    ░       ▒ ░  ░        ░   ▒      
+░ ░         ░        ░  ░      ░            ░                 ░  ░   
+░                                                                    
+
+
+
+              _______    __   ___  _______      ________  
+             /"     "|  |/"| /  ")/"     "|    /"      ") 
+            (__/|    :) (: |/   /(__/|    :)  (:   //|_/  
+                / ___/  |    __/     / ___/    |___ |     
+               // |___  (// _  |    // |___    __ | ||    
+              (:  /  "| |: | |  |  (:  /  "|  /" ||  :)   
+               |_______)(__|  |__)  |_______)(_______/    
+                                                          
   `;
 
   const skullArt = `
-                    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-                    ░░░░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░
-                    ░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░
-                    ░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░
-                    ░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░
-                    ░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░
-                    ░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░
-                    ░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░
-                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░
-                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-                    ░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░
-                    ░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░
-                    ░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░
-                    ░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░
-                    ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░
-                    ░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░
-                    ░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░
-                    ░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░
-                    ░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░
-                    ░░░░░░░░░░░░▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░
+                          ...----....
+                    ..-:"''         ''"-..
+                 .-'                      '-.
+               .'              .     .       '.
+             .'   .          .    .      .    .''.
+           .'  .    .       .   .   .     .   . ..:.
+         .' .   . .  .       .   .   ..  .   . ....::.
+        ..   .   .      .  .    .     .  ..  . ....:IA.
+       .:  .   .    .    .  .  .    .. .  .. .. ....:IA.
+      .: .   .   ..   .    .     . . .. . ... ....:.:VHA.
+      '..  .  .. .   .       .  . .. . .. . .....:.::IHHB.
+     .:. .  . .  . .   .  .  . . . ...:.:... .......:HIHMM.
+    .:.... .   . ."::"'.. .   .  . .:.:.:II;,. .. ..:IHIMMA
+    ':.:..  ..::IHHHHHI::. . .  ...:.::::.,,,. . ....VIMMHM
+   .:::I. .AHHHHHHHHHHAI::. .:...,:IIHHHHHHMMMHHL:. . VMMMM
+  .:.:V.:IVHHHHHHHMHMHHH::..:" .:HIHHHHHHHHHHHHHMHHA. .VMMM.
+  :..V.:IVHHHHHMMHHHHHHHB... . .:VPHHMHHHMMHHHHHHHHHAI.:VMMI
+  ::V..:VIHHHHHHMMMHHHHHH. .   .I":IIMHHMMHHHHHHHHHHHAPI:WMM
+  ::". .:.HHHHHHHHMMHHHHHI.  . .:..I:MHMMHHHHHHHHHMHV:':H:WM
+  :: . :.::IIHHHHHHMMHHHHV  .ABA.:.:IMHMHMMMHMHHHHV:'. .IHWW
+  '.  ..:..:.:IHHHHHMMHV" .AVMHMA.:.'VHMMMMHHHHHV:' .  :IHWV
+   :.  .:...:".:.:TPP"   .AVMMHMMA.:. "VMMHHHP.:... .. :IVAI
+  .:.   '... .:"'   .   ..HMMMHMMMA::. ."VHHI:::....  .:IHW'
+  ...  .  . ..:IIPPIH: ..HMMMI.MMMV:I:.  .:ILLH:.. ...:I:IM
+: .   .'"' .:.V". .. .  :HMMM:IMMMI::I. ..:HHIIPPHI::'.P:HM.
+:.  .  .  .. ..:.. .    :AMMM IMMMM..:...:IV":T::I::.".:IHIMA
+'V:.. .. . .. .  .  .   'VMMV..VMMV :....:V:.:..:....::IHHHMH
+  "IHH:.II:.. .:. .  . . . " :HB"" . . ..PI:.::.:::..:IHHMMV"
+   :IP""HHII:.  .  .    . . .'V:. . . ..:IH:.:.::IHIHHMMMMM"
+   :V:. VIMA:I..  .     .  . .. . .  .:.I:I:..:IHHHHMMHHMMM
+   :"VI:.VWMA::. .:      .   .. .:. ..:.I::.:IVHHHMMMHMMMMI
+   :."VIIHHMMA:.  .   .   .:  .:.. . .:.II:I:AMMMMMMHMMMMMI
+   :..VIHIHMMMI...::.,:.,:!"I:!"I!"I!"V:AI:VAMMMMMMHMMMMMM'
+   ':.:HIHIMHHA:"!!"I.:AXXXVVXXXXXXXA:."HPHIMMMMHHMHMMMMMV
+     V:H:I:MA:W'I :AXXXIXII:IIIISSSSSSXXA.I.VMMMHMHMMMMMM
+       'I::IVA ASSSSXSSSSBBSBMBSSSSSSBBMMMBS.VVMMHIMM'"'
+        I:: VPAIMSSSSSSSSSBSSSMMBSSSBBMMMMXXI:MMHIMMI
+       .I::. "H:XIIXBBMMMMMMMMMMMMMMMMMBXIXXMMPHIIMM'
+       :::I.  ':XSSXXIIIIXSSBMBSSXXXIIIXXSMMAMI:.IMM
+       :::I:.  .VSSSSSISISISSSBII:ISSSSBMMB:MI:..:MM
+       ::.I:.  ':"SSSSSSSISISSXIIXSSSSBMMB:AHI:..MMM.
+       ::.I:. . ..:"BBSSSSSSSSSSSSBBBMMMB:AHHI::.HMMI
+       :..::.  . ..::":BBBBBSSBBBMMMB:MMMMHHII::IHHMI
+       ':.I:... ....:IHHHHHMMMMMMMMMMMMMMMHHIIIIHMMV"
+         "V:. ..:...:.IHHHMMMMMMMMMMMMMMMMHHHMHHMHP'
+          ':. .:::.:.::III::IHHHHMMMMMHMHMMHHHHM"
+            "::....::.:::..:..::IIIIIHHHHMMMHHMV"
+              "::.::.. .. .  ...:::IIHHMMMMHMV"
+                "V::... . .I::IHHMMV"'
+                  '"VHVHHHAHHHHMMV:"'
   `;
 
   // Typing effect for current step
@@ -102,7 +134,7 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
         const timer = setTimeout(() => {
           setTypingText(currentText.slice(0, currentChar + 1));
           setCurrentChar(currentChar + 1);
-        }, Math.random() * 50 + 30); // Realistic typing speed with variation
+        }, Math.random() * 20 + 10); // Much faster typing speed (reduced from 50+30ms to 20+10ms)
         return () => clearTimeout(timer);
       } else {
         // Move to next step after typing is complete
@@ -118,7 +150,7 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
             setCurrentChar(0);
             setTypingText('');
           }
-        }, 800);
+        }, 300); // Reduced from 800ms to 300ms for faster boot sequence
         return () => clearTimeout(timer);
       }
     }
@@ -132,7 +164,7 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
         const timer = setTimeout(() => {
           setTypingText(currentText.slice(0, currentChar + 1));
           setCurrentChar(currentChar + 1);
-        }, currentText === '' ? 0 : Math.random() * 80 + 40);
+        }, currentText === '' ? 0 : Math.random() * 30 + 20); // Reduced typing delay (from 80+40ms to 30+20ms)
         return () => clearTimeout(timer);
       } else {
         const timer = setTimeout(() => {
@@ -140,13 +172,13 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
             setShowSkull(true);
           }
           if (prankStep === prankSequence.length - 1) {
-            setTimeout(() => onComplete(), 2000);
+            setTimeout(() => onComplete(), 1000); // Reduced final delay from 2000ms to 1000ms
           } else {
             setPrankStep(prankStep + 1);
             setCurrentChar(0);
             setTypingText('');
           }
-        }, prankStep === 12 ? 2000 : 600);
+        }, prankStep === 12 ? 1000 : 300); // Reduced delays (from 2000ms to 1000ms, and 600ms to 300ms)
         return () => clearTimeout(timer);
       }
     }
@@ -280,12 +312,12 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
             <AnimatePresence>
               {showGlitch && (
                 <>
-                  {/* Red Glitch Overlay */}
+                  {/* Red Glitch Overlay - Faster animation */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: [0, 0.8, 0, 0.6, 0] }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5, repeat: 3 }}
+                    transition={{ duration: 0.3, repeat: 2 }} /* Faster duration and fewer repeats */
                     className="absolute inset-0 bg-red-500/30 pointer-events-none z-40"
                     style={{
                       background: `repeating-linear-gradient(
@@ -298,13 +330,13 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
                     }}
                   />
                   
-                  {/* Static Noise */}
+                  {/* Static Noise - Faster animation */}
                   <motion.div
                     animate={{ 
                       backgroundPosition: ['0% 0%', '100% 100%'],
                       opacity: [0.1, 0.3, 0.1]
                     }}
-                    transition={{ duration: 0.1, repeat: Infinity }}
+                    transition={{ duration: 0.05, repeat: Infinity }} /* Faster noise animation */
                     className="absolute inset-0 pointer-events-none z-35"
                     style={{
                       backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E")`,
@@ -326,7 +358,7 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
                     rotate: [0, -5, 5, -2, 0]
                   }}
                   exit={{ opacity: 0, scale: 0 }}
-                  transition={{ duration: 3 }}
+                  transition={{ duration: 1.5 }} /* Reduced from 3s to 1.5s */
                   className="absolute inset-0 flex items-center justify-center z-50 bg-black/80"
                 >
                   <div className="text-center">

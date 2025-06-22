@@ -1,8 +1,9 @@
+/* Import Cyberpunk/Terminal Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=VT323&family=IBM+Plex+Mono:wght@400;500;600&family=Orbitron:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* Enhanced Font Classes */
 .font-mono {
@@ -28,9 +29,86 @@
   .rotate-y-180 {
     transform: rotateY(180deg);
   }
+
+  /* Terminal Text Effect */
+  .terminal-text {
+    color: #00ff41;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+    font-family: 'Share Tech Mono', 'VT323', monospace;
+  }
+  
+  /* CRT Screen Effect */
+  .crt-screen {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .crt-screen::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 65, 0.15) 3px,
+      rgba(0, 255, 65, 0.15) 5px
+    );
+    pointer-events: none;
+    z-index: 10;
+    animation: scanline 10s linear infinite;
+  }
+  
+  .crt-screen::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle at center,
+      transparent 30%,
+      rgba(0, 0, 0, 0.5) 90%
+    );
+    pointer-events: none;
+    z-index: 9;
+    opacity: 0.4;
+  }
   
   .text-shadow-glow {
     text-shadow: 0 0 10px rgba(34, 197, 94, 0.8), 0 0 20px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.4);
+  }
+}
+
+/* Fallout/Terminal UI Components */
+@layer components {
+  /* Terminal Button */
+  .terminal-btn {
+    @apply bg-transparent border-2 border-terminal-green text-terminal-green font-mono py-2 px-4 transition-all
+           duration-300 relative overflow-hidden shadow-terminal hover:bg-terminal-green/10;
+  }
+  
+  .terminal-btn::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-0.5 bg-terminal-green opacity-0 transition-opacity duration-300;
+  }
+  
+  .terminal-btn:hover::before {
+    @apply animate-circuit-h opacity-100;
+  }
+  
+  /* Terminal Card */
+  .terminal-card {
+    @apply bg-black/60 backdrop-blur-sm border border-terminal-green/30 rounded p-4
+           shadow-terminal transition-all duration-300;
+  }
+  
+  .terminal-card:hover {
+    @apply border-terminal-green/60 shadow-glow;
   }
 }
 
@@ -39,7 +117,7 @@
   background: linear-gradient(
     to bottom,
     transparent 50%,
-    rgba(34, 197, 94, 0.03) 50%
+    rgba(0, 255, 65, 0.03) 50%
   );
   background-size: 100% 4px;
   position: relative;

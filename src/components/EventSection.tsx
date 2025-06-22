@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DivideIcon as LucideIcon } from 'lucide-react';
 import GlassmorphismPanel from './GlassmorphismPanel';
 import * as Icons from 'lucide-react';
 
@@ -20,8 +19,8 @@ interface EventSectionProps {
 }
 
 const EventSection: React.FC<EventSectionProps> = ({ title, events, className = '' }) => {
-  const getIcon = (iconName: string): LucideIcon => {
-    const IconComponent = Icons[iconName as keyof typeof Icons] as LucideIcon;
+  const getIcon = (iconName: string): React.ComponentType<any> => {
+    const IconComponent = Icons[iconName as keyof typeof Icons] as React.ComponentType<any>;
     return IconComponent || Icons.Calendar;
   };
 

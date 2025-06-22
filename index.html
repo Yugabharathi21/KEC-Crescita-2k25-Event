@@ -21,6 +21,63 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
   </head>
   <body class="bg-black text-green-400 font-mono">
+    <!-- Inline loader to prevent white flash -->
+    <style>
+      .loader-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      .loader-text {
+        color: #00ff41;
+        font-family: 'Share Tech Mono', monospace;
+        text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
+        font-size: 24px;
+        letter-spacing: 0.1em;
+      }
+      .loader-text::after {
+        content: "";
+        animation: dots 1.5s infinite;
+      }
+      @keyframes dots {
+        0%, 20% { content: "."; }
+        40% { content: ".."; }
+        60% { content: "..."; }
+        80%, 100% { content: ""; }
+      }
+      .scanline {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        background: linear-gradient(to bottom, transparent, rgba(0, 255, 65, 0.2), transparent);
+        opacity: 0.7;
+        animation: scan 3s linear infinite;
+      }
+      @keyframes scan {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+      }
+    </style>
+    <div class="loader-container" id="initial-loader">
+      <div class="scanline"></div>
+      <div class="loader-text">SYSTEM INITIALIZING</div>
+    </div>
+    <script>
+      // Hide loader after content is loaded
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          document.getElementById('initial-loader').style.display = 'none';
+        }, 1500);
+      });
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

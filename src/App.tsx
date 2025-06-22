@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import BootSequence from './components/BootSequence';
 import Header from './components/Header';
@@ -16,14 +16,25 @@ import contactsData from './data/contacts.json';
 function App() {
   const [showBoot, setShowBoot] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleBootComplete = () => {
     setShowBoot(false);
   };
 
+  // Hide the initial loading screen after components are ready
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Set up section cycling when boot completes
   useEffect(() => {
     if (!showBoot) {
       const interval = setInterval(() => {
+        // Using functional update to modify state, not directly using currentSection
         setCurrentSection((prev) => (prev + 1) % 4);
       }, 5000);
       return () => clearInterval(interval);
@@ -39,53 +50,116 @@ function App() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden relative">
-      {/* Unified CRT Background Grid */}
+      {/* Initial Loading Screen */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-terminal-green text-xl font-mono">
+            INITIALIZING...
+          </motion.div>
+        </div>
+      )}
+    
+      {/* Enhanced CRT Background and Grid Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Main Grid Pattern */}
+        {/* Base Grid Pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div 
+            className="w-full h-full"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(0, 255, 65, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.15) 1px, transparent 1px)
+              `,
+              backgroundSize: '40px 40px'
+            }}
+          />
+        </div>
+        
+        {/* Secondary Larger Grid Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div 
             className="w-full h-full"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(34, 197, 94, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(34, 197, 94, 0.3) 1px, transparent 1px)
+                linear-gradient(rgba(0, 255, 65, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.2) 1px, transparent 1px)
               `,
-              backgroundSize: '50px 50px'
+              backgroundSize: '160px 160px'
             }}
           />
         </div>
-        
-        {/* CRT Scanlines */}
-        <div 
-          className="absolute inset-0 opacity-20"
+
+        {/* CRT Scanlines - Animated */}
+        <motion.div 
+          className="absolute inset-0 opacity-15"
+          animate={{
+            backgroundPosition: ["0px 0px", "0px -10px"]
+          }}
+          transition={{ duration: 0.5, repeat: Infinity, ease: "linear" }}
           style={{
             background: `repeating-linear-gradient(
               0deg,
               transparent,
               transparent 2px,
-              rgba(34, 197, 94, 0.1) 2px,
-              rgba(34, 197, 94, 0.1) 4px
+              rgba(0, 255, 65, 0.15) 3px,
+              rgba(0, 255, 65, 0.15) 5px
             )`
           }}
         />
         
-        {/* Radial CRT Glow */}
-        <div className="absolute inset-0 bg-gradient-radial from-green-900/20 via-transparent to-black/80" />
+        {/* CRT Flicker Effect */}
+        <motion.div
+          className="absolute inset-0 bg-green-500/5"
+          animate={{ opacity: [0.02, 0.08, 0.02] }}
+          transition={{ duration: 0.2, repeat: Infinity, repeatType: "reverse" }}
+        />
         
-        {/* Corner Vignette */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/60" />
+        {/* Radial CRT Glow */}
+        <div className="absolute inset-0 bg-gradient-radial from-green-900/30 via-transparent to-black/80" />
+        
+        {/* Corner Vignette Effect */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent" />
+        </div>
         
         {/* Animated Circuit Lines */}
         <motion.div
           className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent"
           animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
         />
         <motion.div
-          className="absolute bottom-0 right-0 w-1 h-full bg-gradient-to-t from-transparent via-green-500/50 to-transparent"
-          animate={{ y: ['100%', '-100%'] }}
+          className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent"
+          animate={{ x: ['100%', '-100%'] }}
           transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
         />
+        <motion.div
+          className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-green-500/50 to-transparent"
+          animate={{ y: ['-100%', '100%'] }}
+          transition={{ duration: 13, repeat: Infinity, ease: 'linear' }}
+        />
+        <motion.div
+          className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-green-500/50 to-transparent"
+          animate={{ y: ['100%', '-100%'] }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'linear' }}
+        />
+
+        {/* Digital Noise Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-screen">
+          <svg width="100%" height="100%">
+            <filter id="noise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+              <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noise)" fill="#00ff41" />
+          </svg>
+        </div>
       </div>
 
       {/* Boot Sequence */}
@@ -200,7 +274,7 @@ function App() {
                     transition={{ duration: 1, delay: 1 }}
                     className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-4xl mx-auto"
                   >
-                    {heroStats.map((stat, index) => (
+                    {heroStats.map((stat) => (
                       <motion.div
                         key={stat.label}
                         whileHover={{ 
