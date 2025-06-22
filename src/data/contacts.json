@@ -1,0 +1,33 @@
+{
+  "contacts": [
+    {
+      "name": "J Shivaani",
+      "position": "Secretary - CSEA",
+      "phone": "9047539797",
+      "email": "shivaani@kec.edu"
+    },
+    {
+      "name": "Rajesh Kumar",
+      "position": "Event Coordinator",
+      "phone": "9876543210",
+      "email": "rajesh@kec.edu"
+    },
+    {
+      "name": "Priya Sharma",
+      "position": "Technical Head",
+      "phone": "8765432109",
+      "email": "priya@kec.edu"
+    },
+    {
+      "name": "Arjun Patel",
+      "position": "Registration Head",
+      "phone": "7654321098",
+      "email": "arjun@kec.edu"
+    }
+  ],
+  "developers": {
+    "designed_by": ["Varun Kumar N", "Yugabharathi J"],
+    "developed_by": ["Varun Kumar N", "Yugabharathi J"],
+    "copyright": "© Crescita2025"
+  }
+}

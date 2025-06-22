@@ -1,0 +1,118 @@
+{
+  "technicalEvents": [
+    {
+      "title": "Think Tank Talk",
+      "type": "Paper Presentation",
+      "description": "Present innovative research or conceptual papers to a panel of judges.",
+      "time": "09:30 AM",
+      "icon": "brain"
+    },
+    {
+      "title": "Code Catalyst",
+      "type": "Programming Contest",
+      "description": "Competitive programming challenge to test algorithmic thinking.",
+      "time": "10:30 AM",
+      "icon": "code"
+    },
+    {
+      "title": "Debug Derby",
+      "type": "Debugging Challenge",
+      "description": "Find and fix bugs in complex code scenarios under time pressure.",
+      "time": "11:30 AM",
+      "icon": "bug"
+    },
+    {
+      "title": "Tech Trivia",
+      "type": "Quiz Competition",
+      "description": "Test your knowledge across various technology domains.",
+      "time": "02:30 PM",
+      "icon": "help-circle"
+    }
+  ],
+  "workshops": [
+    {
+      "title": "AI & Machine Learning Workshop",
+      "type": "Workshop",
+      "description": "Hands-on session on modern AI techniques and implementation.",
+      "status": "Open",
+      "time": "10:00 AM",
+      "icon": "cpu"
+    },
+    {
+      "title": "Web Development Bootcamp",
+      "type": "Workshop",
+      "description": "Full-stack web development using modern frameworks.",
+      "status": "Open",
+      "time": "11:00 AM",
+      "icon": "globe"
+    },
+    {
+      "title": "Cybersecurity Essentials",
+      "type": "Workshop",
+      "description": "Understanding modern cybersecurity threats and solutions.",
+      "status": "Closed",
+      "time": "03:00 PM",
+      "icon": "shield"
+    }
+  ],
+  "nonTechnicalEvents": [
+    {
+      "title": "Creative Canvas",
+      "type": "Art & Design",
+      "description": "Digital art and design competition with creative themes.",
+      "time": "01:15 PM",
+      "icon": "palette"
+    },
+    {
+      "title": "Mind Maze",
+      "type": "Puzzle Challenge",
+      "description": "Logic puzzles and brain teasers to test problem-solving skills.",
+      "time": "01:15 PM",
+      "icon": "puzzle"
+    },
+    {
+      "title": "Innovation Pitch",
+      "type": "Presentation",
+      "description": "Present your innovative ideas and entrepreneurial solutions.",
+      "time": "01:15 PM",
+      "icon": "lightbulb"
+    }
+  ],
+  "generalEvents": [
+    {
+      "title": "Registration Desk",
+      "type": "General",
+      "description": "Register and collect your ID kit and event materials.",
+      "time": "08:30 AM",
+      "icon": "clipboard"
+    },
+    {
+      "title": "Opening Ceremony",
+      "type": "Ceremony",
+      "description": "Official inauguration of CRESCITA'25 with keynote speakers.",
+      "time": "09:00 AM",
+      "icon": "play"
+    },
+    {
+      "title": "Lunch Break",
+      "type": "General",
+      "description": "Networking lunch with fellow participants and organizers.",
+      "time": "12:30 PM",
+      "icon": "utensils"
+    },
+    {
+      "title": "Prize Distribution",
+      "type": "Ceremony",
+      "description": "Award ceremony for winners across all competition categories.",
+      "time": "04:30 PM",
+      "icon": "trophy"
+    },
+    {
+      "title": "Closing Ceremony",
+      "type": "Ceremony",
+      "description": "Official closing with feedback session and future announcements.",
+      "time": "05:00 PM",
+      "icon": "flag"
+    }
+  ]
+}
