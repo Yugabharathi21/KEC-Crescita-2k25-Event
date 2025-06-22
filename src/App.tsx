@@ -1,21 +1,42 @@
-import { useState, useEffect } from 'react';
+/**
+ * PERFORMANCE OPTIMIZATIONS:
+ * 1. Replaced JS animations with CSS animations where possible
+ * 2. Implemented lazy loading for non-critical components
+ * 3. Added Suspense boundaries for better loading UX
+ * 4. Reduced animation complexity (fewer particles, simpler transforms)
+ * 5. Used will-change for hardware acceleration on critical animations
+ * 6. Replaced SVG filters with pre-computed CSS
+ * 7. Optimized hover effects to be less resource intensive
+ * 8. Added deterministic delays instead of random ones
+ */
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+// Directly import the BootSequence for initial load
 import BootSequence from './components/BootSequence';
 import Header from './components/Header';
-import EventSection from './components/EventSection';
-import Timeline from './components/Timeline';
-import ContactCard from './components/ContactCard';
-import Footer from './components/Footer';
-import GlassmorphismPanel from './components/GlassmorphismPanel';
-import { Terminal, Zap, Calendar, Award, Users, Code } from 'lucide-react';
+// Lazy load components that are not needed immediately
+const EventSection = lazy(() => import('./components/EventSection'));
+const Timeline = lazy(() => import('./components/Timeline'));
+const ContactCard = lazy(() => import('./components/ContactCard'));
+const Footer = lazy(() => import('./components/Footer'));
+const GlassmorphismPanel = lazy(() => import('./components/GlassmorphismPanel'));
+// Only import the icons we're actually using
+import { Terminal, Zap, Calendar, Award, Users, Code, Info } from 'lucide-react';
 
 // Import JSON data
 import eventsData from './data/events.json';
 import contactsData from './data/contacts.json';
 
+// Import images
+import keclogo from './assets/img/KEC.png';
+import csealogo from './assets/img/csea.png';
+import crescitaLogo from './assets/img/Cersita.png';
+import bannerImg from './assets/img/Banner.jpg';
+
 function App() {
   const [showBoot, setShowBoot] = useState(true);
-  const [currentSection, setCurrentSection] = useState(0);
+  // Using state for section transitions (keeping for future functionality)
+  const [, setCurrentSection] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleBootComplete = () => {
@@ -49,7 +70,7 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden relative">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden relative terminal-bg">
       {/* Initial Loading Screen */}
       {isLoading && (
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
@@ -64,41 +85,11 @@ function App() {
     
       {/* Enhanced CRT Background and Grid Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Base Grid Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div 
-            className="w-full h-full"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(0, 255, 65, 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 65, 0.15) 1px, transparent 1px)
-              `,
-              backgroundSize: '40px 40px'
-            }}
-          />
-        </div>
-        
-        {/* Secondary Larger Grid Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div 
-            className="w-full h-full"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(0, 255, 65, 0.2) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 65, 0.2) 1px, transparent 1px)
-              `,
-              backgroundSize: '160px 160px'
-            }}
-          />
-        </div>
+        {/* Base Grid Pattern handled by CSS now */}
 
-        {/* CRT Scanlines - Animated */}
-        <motion.div 
-          className="absolute inset-0 opacity-15"
-          animate={{
-            backgroundPosition: ["0px 0px", "0px -10px"]
-          }}
-          transition={{ duration: 0.5, repeat: Infinity, ease: "linear" }}
+        {/* CRT Scanlines - Converted to CSS Animation for Better Performance */}
+        <div 
+          className="absolute inset-0 opacity-15 scanline-animation"
           style={{
             background: `repeating-linear-gradient(
               0deg,
@@ -110,11 +101,9 @@ function App() {
           }}
         />
         
-        {/* CRT Flicker Effect */}
-        <motion.div
-          className="absolute inset-0 bg-green-500/5"
-          animate={{ opacity: [0.02, 0.08, 0.02] }}
-          transition={{ duration: 0.2, repeat: Infinity, repeatType: "reverse" }}
+        {/* CRT Flicker Effect - Using CSS Animation Instead */}
+        <div
+          className="absolute inset-0 bg-green-500/5 crt-flicker-animation"
         />
         
         {/* Radial CRT Glow */}
@@ -128,38 +117,16 @@ function App() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent" />
         </div>
         
-        {/* Animated Circuit Lines */}
-        <motion.div
-          className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent"
-          animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+        {/* Animated Circuit Lines - Converted to CSS Animations (Horizontal only) */}
+        <div
+          className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent circuit-h-animation"
         />
-        <motion.div
-          className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent"
-          animate={{ x: ['100%', '-100%'] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-green-500/50 to-transparent"
-          animate={{ y: ['-100%', '100%'] }}
-          transition={{ duration: 13, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-green-500/50 to-transparent"
-          animate={{ y: ['100%', '-100%'] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'linear' }}
+        <div
+          className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent circuit-h-reverse-animation"
         />
 
-        {/* Digital Noise Overlay */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-screen">
-          <svg width="100%" height="100%">
-            <filter id="noise">
-              <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-              <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#noise)" fill="#00ff41" />
-          </svg>
-        </div>
+        {/* Digital Noise Overlay - Simplified with CSS */}
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-screen noise-bg"></div>
       </div>
 
       {/* Boot Sequence */}
@@ -179,27 +146,29 @@ function App() {
             <Header />
 
             {/* Hero Section */}
-            <section className="min-h-screen flex items-center justify-center relative pt-20 pb-16 overflow-hidden">
+            <section className="min-h-screen flex items-center justify-center relative pt-20 pb-16 overflow-hidden terminal-section">
+              <div className="section-glow"></div>
               {/* Hero Background Effects */}
               <div className="absolute inset-0">
-                {/* Floating Particles */}
-                {Array.from({ length: 20 }).map((_, i) => (
+                {/* Floating Particles - Reduced quantity for better performance */}
+                {Array.from({ length: 10 }).map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute w-2 h-2 bg-green-400/30 rounded-full"
+                    className="absolute w-2 h-2 bg-green-400/30 rounded-full will-change-transform"
                     style={{
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
                     }}
                     animate={{
-                      y: [0, -30, 0],
-                      opacity: [0.3, 0.8, 0.3],
-                      scale: [1, 1.5, 1],
+                      y: [0, -20, 0],
+                      opacity: [0.3, 0.7, 0.3],
+                      scale: [1, 1.3, 1],
                     }}
                     transition={{
-                      duration: 3 + Math.random() * 2,
+                      duration: 4,
                       repeat: Infinity,
-                      delay: Math.random() * 2,
+                      delay: i * 0.2, // deterministic delay instead of random
+                      ease: "easeInOut"
                     }}
                   />
                 ))}
@@ -365,65 +334,283 @@ function App() {
                 </div>
               </div>
 
-              {/* Enhanced Floating Elements */}
-              <motion.div
-                className="absolute top-20 left-10 w-4 h-4 bg-green-400/60 rounded-full"
-                animate={{ 
-                  y: [0, -20, 0], 
-                  opacity: [0.6, 1, 0.6],
-                  boxShadow: ["0 0 10px rgba(34, 197, 94, 0.3)", "0 0 20px rgba(34, 197, 94, 0.6)", "0 0 10px rgba(34, 197, 94, 0.3)"]
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
+              {/* Enhanced Floating Elements - CSS Animations for Better Performance */}
+              <div
+                className="absolute top-20 left-10 w-4 h-4 bg-green-400/60 rounded-full floating-element-1"
               />
-              <motion.div
-                className="absolute bottom-40 right-20 w-6 h-6 border-2 border-green-400/60 rounded-full"
-                animate={{ 
-                  rotate: 360, 
-                  scale: [1, 1.2, 1],
-                  borderColor: ["rgba(34, 197, 94, 0.6)", "rgba(34, 197, 94, 1)", "rgba(34, 197, 94, 0.6)"]
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
+              <div
+                className="absolute bottom-40 right-20 w-6 h-6 border-2 border-green-400/60 rounded-full rotating-element"
               />
               
-              {/* Additional Tech Elements */}
-              <motion.div
-                className="absolute top-1/3 right-10 w-8 h-8 border border-green-400/40"
-                animate={{ 
-                  rotate: [0, 90, 180, 270, 360],
-                  scale: [1, 0.8, 1, 1.2, 1]
-                }}
-                transition={{ duration: 8, repeat: Infinity }}
+              {/* Additional Tech Elements - CSS Animation */}
+              <div
+                className="absolute top-1/3 right-10 w-8 h-8 border border-green-400/40 tech-element"
               />
             </section>
 
+            {/* About Section with Terminal Style */}
+            <section id="about" className="py-16 terminal-section relative">
+              <div className="section-glow"></div>
+              <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-grid-pattern-large opacity-5"></div>
+                
+                {/* Terminal scan line */}
+                <motion.div 
+                  className="absolute inset-0 opacity-10"
+                  animate={{
+                    backgroundPosition: ["0px 0px", "0px 100px"]
+                  }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  style={{
+                    background: `repeating-linear-gradient(
+                      0deg,
+                      transparent,
+                      transparent 5px,
+                      rgba(0, 255, 65, 0.15) 5px,
+                      rgba(0, 255, 65, 0.15) 10px
+                    )`
+                  }}
+                />
+              </div>
+              
+              {/* Section Header */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="container mx-auto px-4 mb-12 text-center"
+              >
+                <div className="relative inline-block">
+                  <h2 className="text-4xl font-bold mb-2 font-mono text-terminal-green inline-flex items-center">
+                    <Info className="mr-2 h-8 w-8 text-terminal-green" />
+                    // SYSTEM_INFO
+                  </h2>
+                  
+                  {/* Glitch effect */}
+                  <motion.div
+                    className="absolute inset-0 text-terminal-green/30 font-mono text-4xl font-bold flex items-center"
+                    animate={{ 
+                      x: [0, -2, 2, 0],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 5 }}
+                  >
+                    <Info className="mr-2 h-8 w-8 text-terminal-green/30" />
+                    // SYSTEM_INFO
+                  </motion.div>
+                </div>
+                
+                <div className="relative h-1 w-32 mx-auto">
+                  <div className="h-full w-full bg-gradient-to-r from-terminal-green to-terminal-green/60 rounded-full"></div>
+                  
+                  {/* Animated pulse */}
+                  <motion.div 
+                    className="absolute inset-0 bg-terminal-green/50 rounded-full"
+                    animate={{
+                      opacity: [0.3, 0.8, 0.3]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Cards Grid */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="container mx-auto px-4 relative"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                  
+                  {/* KEC Card - Optimized hover effect */}
+                  <motion.div
+                    whileHover={{ y: -3, boxShadow: "0 0 15px #00ff41" }}
+                    className="terminal-card bg-black/60 border border-terminal-green/30 rounded p-6"
+                    transition={{ type: "tween", duration: 0.2 }}
+                  >
+                    <div className="relative w-32 h-32 mx-auto mb-4">
+                      <div className="absolute inset-0 rounded-full bg-terminal-green/20 animate-pulse shadow-terminal"></div>
+                      <img
+                        src={keclogo}
+                        alt="KEC Logo"
+                        className="w-full h-full object-contain relative z-10"
+                      />
+                      <div className="absolute inset-0 bg-terminal-green/5 rounded-full"></div>
+                    </div>
+                    
+                    <div className="border-t border-b border-terminal-green/40 py-2 mb-4">
+                      <h3 className="text-xl font-mono font-bold text-terminal-green text-center">
+                        Kongu Engineering College
+                      </h3>
+                    </div>
+                    
+                    <div className="text-sm terminal-text text-terminal-green/90 h-64 overflow-y-auto pr-2 custom-scrollbar">
+                      <p className="text-justify leading-relaxed">
+                        Kongu Engineering College was established in the year 1984, approved by AICTE, New Delhi, accredited by NAAC for 5 years with the grade of "A++" and an autonomous institution affiliated to Anna University, Chennai.
+                        <br/><br/>
+                        The institution has completed 40 years of dedicated and excellent service in the field of technical education. It offers 14 UG, 6 PG and 16 Research programmes in Engineering, Applied Science and Management imparting high quality value education in India.
+                        <br/><br/>
+                        It is one of the best self financing engineering colleges imparting high quality technical education in Tamil Nadu, India, and is well-known for its technical excellence, modern facilities, record of performance with excellent results and enterprising students, 2nd Position among Self Financing Engineering Colleges in Tamilnadu, 9th position in top Engineering colleges of super excellence and 64th position among 126 top Engineering Colleges in India including (IITs and NITs) in Competition Success Review (CSR). Kongu Engineering College has been awarded Swachha campus ranking for the year 2019 by AICTE.
+                      </p>
+                    </div>
+                  </motion.div>
+                  
+                  {/* Crescita Card - Optimized hover effect */}
+                  <motion.div
+                    whileHover={{ y: -3, boxShadow: "0 0 15px #00ff41" }}
+                    className="terminal-card bg-black/60 border border-terminal-green/30 rounded p-6"
+                    transition={{ type: "tween", duration: 0.2 }}
+                  >
+                    <div className="relative w-32 h-32 mx-auto mb-4">
+                      <div className="absolute inset-0 rounded-full bg-terminal-green/20 animate-pulse shadow-terminal"></div>
+                      <img
+                        src={crescitaLogo}
+                        alt="Crescita Logo"
+                        className="w-full h-full object-contain relative z-10"
+                      />
+                      <div className="absolute inset-0 bg-terminal-green/5 rounded-full"></div>
+                    </div>
+                    
+                    <div className="border-t border-b border-terminal-green/40 py-2 mb-4">
+                      <h3 className="text-xl font-mono font-bold text-terminal-green text-center">
+                        CRESCITA'25
+                      </h3>
+                    </div>
+                    
+                    <div className="text-sm terminal-text text-terminal-green/90 h-64 overflow-y-auto pr-2 custom-scrollbar">
+                      <p className="text-justify leading-relaxed">
+                        Crescita is a national-level symposium conducted every year by the Computer Science and Engineering department of Kongu Engineering College. 
+                        <br/><br/>
+                        Crescita, a great platform to showcase your innovative ideas and enhance your technical skills, features both technical and non-technical events, workshops, and talks by industry experts.
+                        <br/><br/>
+                        The name "Crescita" comes from the Italian word for "growth," symbolizing our commitment to fostering technical growth and innovation. Every year, Crescita brings together thousands of students from various colleges across India, creating an ecosystem of learning, competition, and collaboration.
+                        <br/><br/>
+                        This year's Crescita features a special Fallout-inspired terminal theme, bringing a unique cyberpunk aesthetic to the technical symposium experience.
+                      </p>
+                    </div>
+                  </motion.div>
+                  
+                  {/* CSE Department Card - Optimized hover effect */}
+                  <motion.div
+                    whileHover={{ y: -3, boxShadow: "0 0 15px #00ff41" }}
+                    className="terminal-card bg-black/60 border border-terminal-green/30 rounded p-6"
+                    transition={{ type: "tween", duration: 0.2 }}
+                  >
+                    <div className="relative w-32 h-32 mx-auto mb-4">
+                      <div className="absolute inset-0 rounded-full bg-terminal-green/20 animate-pulse shadow-terminal"></div>
+                      <img
+                        src={csealogo}
+                        alt="CSEA Logo"
+                        className="w-full h-full object-contain relative z-10"
+                      />
+                      <div className="absolute inset-0 bg-terminal-green/5 rounded-full"></div>
+                    </div>
+                    
+                    <div className="border-t border-b border-terminal-green/40 py-2 mb-4">
+                      <h3 className="text-xl font-mono font-bold text-terminal-green text-center">
+                        Department of CSE
+                      </h3>
+                    </div>
+                    
+                    <div className="text-sm terminal-text text-terminal-green/90 h-64 overflow-y-auto pr-2 custom-scrollbar">
+                      <p className="text-justify leading-relaxed">
+                        Department of CSE was started in the year 1988 with B.E. programme. With the increasing demand in Computer Science and Engineering, M.E programme was started in the year 1999. The department is recognized to offer research programme leading to Ph.D.
+                        <br/><br/>
+                        The department aims at developing intellectually alert, scientifically progressive, globally competent and dynamic young IT professionals. Right from its inception it is continuously striving to impart quality education and promoting competitive spirit among students for academic excellence. 
+                        <br/><br/>
+                        The department has well equipped laboratories, good infrastructure, highly qualified and experienced faculty. The department has signed MOUs with various organizations to provide real time training to the students. The department was sanctioned FDP under various schemes and was successfully executed.
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+                
+                {/* Event Banner */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  viewport={{ once: true }}
+                  className="max-w-5xl mx-auto p-2 rounded border-2 border-terminal-green/40 bg-black/70 shadow-terminal overflow-hidden"
+                >
+                  <div className="relative crt-screen overflow-hidden">
+                    <img src={bannerImg} alt="Crescita 2025" className="w-full h-auto" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                    <div className="absolute inset-0 bg-terminal-green/10 mix-blend-overlay"></div>
+                    
+                    {/* Terminal overlay elements */}
+                    <div className="absolute top-4 left-4 flex items-center">
+                      <div className="h-2 w-2 rounded-full bg-terminal-green animate-pulse mr-2"></div>
+                      <div className="text-xs text-terminal-green font-mono">SYSTEM.READY</div>
+                    </div>
+                    
+                    <div className="absolute top-4 right-4 text-terminal-green/80 text-xs font-mono">
+                      [TERMINAL:2077]
+                    </div>
+                    
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <div className="text-terminal-green text-xl font-mono font-bold flex items-center">
+                        &gt; CRESCITA.EXE --VERSION 2025
+                        <motion.span 
+                          animate={{ opacity: [1, 0] }}
+                          transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+                          className="ml-2 inline-block w-3 h-5 bg-terminal-green"
+                        />
+                      </div>
+                      <div className="text-terminal-green/80 text-sm font-mono">
+                        &gt; NATIONAL LEVEL TECHNICAL SYMPOSIUM
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </section>
+
             {/* Event Sections with Enhanced Backgrounds */}
-            <div id="events" className="relative">
-              <EventSection
-                title="// TECHNICAL_EVENTS"
-                events={eventsData.technicalEvents}
-                className="bg-gradient-to-r from-gray-900/50 to-black/50 relative"
-              />
+            <div id="events" className="relative terminal-section">
+              <div className="section-glow"></div>
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-terminal-green">Loading technical events...</div>}>
+                <EventSection
+                  title="// TECHNICAL_EVENTS"
+                  events={eventsData.technicalEvents}
+                  className="terminal-section relative"
+                />
+              </Suspense>
 
-              <EventSection
-                title="// WORKSHOPS"
-                events={eventsData.workshops}
-                className="bg-gradient-to-l from-gray-900/50 to-black/50 relative"
-              />
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-terminal-green">Loading workshops...</div>}>
+                <EventSection
+                  title="// WORKSHOPS"
+                  events={eventsData.workshops}
+                  className="terminal-section relative"
+                />
+              </Suspense>
 
-              <EventSection
-                title="// NON_TECHNICAL_EVENTS"
-                events={eventsData.nonTechnicalEvents}
-                className="bg-gradient-to-r from-gray-900/50 to-black/50 relative"
-              />
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-terminal-green">Loading non-technical events...</div>}>
+                <EventSection
+                  title="// NON_TECHNICAL_EVENTS"
+                  events={eventsData.nonTechnicalEvents}
+                  className="terminal-section relative"
+                />
+              </Suspense>
             </div>
 
             {/* Timeline Section */}
-            <div id="schedule" className="bg-gradient-to-b from-black/50 to-gray-900/50 relative">
-              <Timeline events={eventsData.generalEvents} />
+            <div id="schedule" className="terminal-section relative">
+              <div className="section-glow"></div>
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-terminal-green">Loading schedule...</div>}>
+                <Timeline events={eventsData.generalEvents} />
+              </Suspense>
             </div>
 
             {/* Contact Section */}
-            <section id="contact" className="py-16 bg-gradient-to-t from-gray-900/50 to-black/50 relative">
+            <section id="contact" className="py-16 terminal-section relative">
+              <div className="section-glow"></div>
               <div className="container mx-auto px-4">
                 <motion.h2
                   initial={{ opacity: 0, y: -30 }}
@@ -434,57 +621,35 @@ function App() {
                   // CONTACT_MATRIX
                   <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-green-500 to-green-400 rounded-full" />
                   
-                  {/* Title Glow Effect */}
-                  <motion.div
-                    className="absolute inset-0 text-green-400/30 blur-lg"
-                    animate={{ opacity: [0.3, 0.6, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                  {/* Title Glow Effect - CSS Animation */}
+                  <div
+                    className="absolute inset-0 text-green-400/30 blur-lg title-glow-animation"
                   >
                     // CONTACT_MATRIX
-                  </motion.div>
+                  </div>
                 </motion.h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-                  {contactsData.contacts.map((contact, index) => (
-                    <ContactCard key={index} contact={contact} index={index} />
-                  ))}
+                  <Suspense fallback={<div className="min-h-[300px] flex items-center justify-center text-terminal-green">Loading contacts...</div>}>
+                    {contactsData.contacts.map((contact, index) => (
+                      <ContactCard key={index} contact={contact} index={index} />
+                    ))}
+                  </Suspense>
                 </div>
               </div>
             </section>
 
-            <Footer developers={contactsData.developers} />
+            <Suspense fallback={<div className="min-h-[200px] flex items-center justify-center text-terminal-green">Loading footer...</div>}>
+              <Footer developers={contactsData.developers} />
+            </Suspense>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Enhanced Global CRT Effects */}
+      {/* Enhanced Global CRT Effects - CSS Only for Better Performance */}
       <div className="fixed inset-0 pointer-events-none z-50">
-        {/* Screen Flicker */}
-        <motion.div
-          className="w-full h-full bg-green-500/5"
-          animate={{ opacity: [0, 0.1, 0] }}
-          transition={{ duration: 0.1, repeat: Infinity, repeatType: "reverse" }}
-        />
-        
-        {/* Random Glitch Lines */}
-        <motion.div
-          className="absolute w-full h-0.5 bg-green-400/30"
-          style={{ top: '30%' }}
-          animate={{ 
-            opacity: [0, 1, 0],
-            scaleX: [0, 1, 0]
-          }}
-          transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 3 }}
-        />
-        <motion.div
-          className="absolute w-full h-0.5 bg-green-400/30"
-          style={{ top: '70%' }}
-          animate={{ 
-            opacity: [0, 1, 0],
-            scaleX: [0, 1, 0]
-          }}
-          transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 5 }}
-        />
+        {/* Screen Flicker - CSS Animation */}
+        <div className="w-full h-full bg-green-500/5 screen-flicker"></div>
       </div>
     </div>
   );

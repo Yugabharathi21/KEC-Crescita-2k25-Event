@@ -131,10 +131,13 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
     if (currentStep < bootSteps.length && !showPrank) {
       const currentText = bootSteps[currentStep];
       if (currentChar < currentText.length) {
+        // Optimize by typing multiple characters at once
+        const charsPerFrame = 3; // Type 3 chars at once
         const timer = setTimeout(() => {
-          setTypingText(currentText.slice(0, currentChar + 1));
-          setCurrentChar(currentChar + 1);
-        }, Math.random() * 20 + 10); // Much faster typing speed (reduced from 50+30ms to 20+10ms)
+          const newPosition = Math.min(currentChar + charsPerFrame, currentText.length);
+          setTypingText(currentText.slice(0, newPosition));
+          setCurrentChar(newPosition);
+        }, 5); // Extremely fast typing - almost instant
         return () => clearTimeout(timer);
       } else {
         // Move to next step after typing is complete
@@ -172,7 +175,7 @@ const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
             setShowSkull(true);
           }
           if (prankStep === prankSequence.length - 1) {
-            setTimeout(() => onComplete(), 1000); // Reduced final delay from 2000ms to 1000ms
+            setTimeout(() => onComplete(), 500); // Reduced final delay from 2000ms to 1000ms
           } else {
             setPrankStep(prankStep + 1);
             setCurrentChar(0);

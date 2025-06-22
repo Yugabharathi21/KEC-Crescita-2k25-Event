@@ -24,10 +24,10 @@ const GlassmorphismPanel: React.FC<GlassmorphismPanelProps> = ({
         ${className}
       `}
       whileHover={hover3D ? { 
-        rotateY: 5,
-        rotateX: 5,
-        scale: 1.02,
-        boxShadow: "0 25px 50px -12px rgba(34, 197, 94, 0.35)"
+        rotateY: 3, // reduced rotation
+        rotateX: 3, // reduced rotation
+        scale: 1.01, // smaller scale change
+        boxShadow: "0 15px 30px -12px rgba(34, 197, 94, 0.25)" // reduced shadow
       } : {}}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       style={{ transformStyle: 'preserve-3d', perspective: 1000 }}
@@ -46,11 +46,9 @@ const GlassmorphismPanel: React.FC<GlassmorphismPanelProps> = ({
         }} />
       </div>
       
-      {/* Animated Scanning Line */}
-      <motion.div
-        className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-green-400/60 to-transparent"
-        animate={{ x: ['-100%', '100%'] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+      {/* Animated Scanning Line - Using CSS Animation Instead */}
+      <div
+        className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-green-400/60 to-transparent panel-scan-animation"
       />
       
       {/* Content */}
@@ -64,17 +62,15 @@ const GlassmorphismPanel: React.FC<GlassmorphismPanelProps> = ({
       <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-green-400/80 rounded-bl shadow-lg shadow-green-400/30" />
       <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-green-400/80 rounded-br shadow-lg shadow-green-400/30" />
       
-      {/* Corner Dots */}
+      {/* Corner Dots - Using Tailwind Animation */}
       <div className="absolute top-1 left-1 w-2 h-2 bg-green-400/60 rounded-full animate-pulse" />
       <div className="absolute top-1 right-1 w-2 h-2 bg-green-400/60 rounded-full animate-pulse" />
       <div className="absolute bottom-1 left-1 w-2 h-2 bg-green-400/60 rounded-full animate-pulse" />
       <div className="absolute bottom-1 right-1 w-2 h-2 bg-green-400/60 rounded-full animate-pulse" />
       
-      {/* Holographic Shimmer */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-green-400/5 to-transparent rounded-xl"
-        animate={{ x: ['-100%', '100%'] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+      {/* Holographic Shimmer - Using CSS Animation */}
+      <div
+        className="absolute inset-0 bg-gradient-to-r from-transparent via-green-400/5 to-transparent rounded-xl panel-shimmer-animation"
       />
     </motion.div>
   );
